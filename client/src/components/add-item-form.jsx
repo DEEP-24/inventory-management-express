@@ -10,8 +10,6 @@ export default function AddItemForm() {
   const [file, setFile] = React.useState(null);
   const [fileName, setFileName] = React.useState("");
 
-  console.log(file);
-
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
