@@ -4,19 +4,29 @@ import { Link } from "react-router-dom";
 
 export default function InventoryList() {
   const [items, setItems] = React.useState([]);
+  const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
     const fetchItems = async () => {
       try {
+        setIsLoading(true);
         const result = await axios.get("/api/inventory/getAllItems");
         setItems(result.data);
+        setIsLoading(false);
       } catch (err) {
         console.log(err);
+        setIsLoading(false);
       }
     };
 
     fetchItems();
   }, []);
+
+  React.useEffect(() => {
+    if (!isLoading && items.length === 0) {
+      window.alert("The inventory is empty.");
+    }
+  }, [items, isLoading]);
 
   const handleDelete = async (id) => {
     await axios
@@ -80,7 +90,7 @@ export default function InventoryList() {
                   <div className="flex items-center justify-center">
                     <Link
                       to={`/edit-item-form/${item._id}`}
-                      className="mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded w-full flex items-center justify-center"
+                      className="mr-2 bg-blue-500 hover:bg-blue-200 text-white font-bold py-1 px-2 rounded w-full flex items-center justify-center"
                     >
                       Edit
                     </Link>
@@ -97,7 +107,11 @@ export default function InventoryList() {
           </tbody>
         </table>
       ) : (
-        <p>No items found</p>
+        <div className="flex items-center justify-center">
+          <p className="text-black text-base">
+            No items found in the inventory
+          </p>
+        </div>
       )}
     </div>
   );

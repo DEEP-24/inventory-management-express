@@ -21,7 +21,7 @@ export default function AddItemForm() {
   };
 
   return (
-    <div className="w-full max-w-md p-10 mt-2">
+    <div className="h-screen w-screen p-10 mt-2">
       <div className="flex items-center justify-center">
         <h1 className="text-black text-xl font-semibold">
           Fill the form to add an item

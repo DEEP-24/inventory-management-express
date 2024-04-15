@@ -8,7 +8,7 @@ import EditItemForm from "./components/edit-item-form.jsx";
 export default function App() {
   return (
     <Router>
-      <div className="min-h-screen flex flex-col items-center bg-white overflow-y-auto">
+      <div className="h-full w-full flex flex-col items-center bg-white overflow-y-auto">
         <nav className="flex items-center justify-center gap-4 mt-2">
           <Link
             to="/data-visualization"
