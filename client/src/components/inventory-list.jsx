@@ -18,10 +18,6 @@ export default function InventoryList() {
     fetchItems();
   }, []);
 
-  //   const handleUpdate = (item) => {
-  //     // logic to update an item
-  //   };
-
   const handleDelete = async (id) => {
     await axios
       .post(`/api/inventory/deleteItem/${id}`)
@@ -34,10 +30,10 @@ export default function InventoryList() {
   };
 
   return (
-    <div className="w-full h-full p-10 overflow-hidden">
+    <div className="w-full h-full p-10 mb-4">
       <div className="flex items-center justify-center mb-4">
         <Link
-          to="/inventory-form"
+          to="/add-item-form"
           className="border-2 text-white text-xl bg-black w-[25%] hover:bg-gray-800 flex items-center justify-center rounded-md h-full p-1"
         >
           Add Item
@@ -82,9 +78,12 @@ export default function InventoryList() {
                 </td>
                 <td className="border p-2 w-auto">
                   <div className="flex items-center justify-center">
-                    <button className="mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded w-full">
+                    <Link
+                      to={`/edit-item-form/${item._id}`}
+                      className="mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded w-full flex items-center justify-center"
+                    >
                       Edit
-                    </button>
+                    </Link>
                     <button
                       onClick={() => handleDelete(item._id)}
                       className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded w-full"

@@ -2,12 +2,13 @@ import { Link, Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import DataVisualization from "./components/data-visualization.jsx";
 import Inventory from "./components/inventory.jsx";
 import "./style.css";
-import InventoryForm from "./components/inventory-form.jsx";
+import AddItemForm from "./components/add-item-form.jsx";
+import EditItemForm from "./components/edit-item-form.jsx";
 
 export default function App() {
   return (
     <Router>
-      <div className="h-screen w-screen flex flex-col items-center bg-white">
+      <div className="min-h-screen flex flex-col items-center bg-white overflow-y-auto">
         <nav className="flex items-center justify-center gap-4 mt-2">
           <Link
             to="/data-visualization"
@@ -22,12 +23,15 @@ export default function App() {
             Inventory Management
           </Link>
         </nav>
-        <Routes>
-          <Route path="/inventory" element={<Inventory />} />
-          <Route path="/data-visualization" element={<DataVisualization />} />
-          <Route path="/inventory-form" element={<InventoryForm />} />
-          <Route path="/" element={<div></div>} />
-        </Routes>
+        <div>
+          <Routes>
+            <Route path="/inventory" element={<Inventory />} />
+            <Route path="/data-visualization" element={<DataVisualization />} />
+            <Route path="/add-item-form" element={<AddItemForm />} />
+            <Route path="/edit-item-form/:itemId" element={<EditItemForm />} />
+            <Route path="/" element={<div></div>} />
+          </Routes>
+        </div>
       </div>
     </Router>
   );
