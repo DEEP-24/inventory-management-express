@@ -1,5 +1,6 @@
 import axios from "axios";
 import * as React from "react";
+import { Link } from "react-router-dom";
 
 export default function InventoryList() {
   const [items, setItems] = React.useState([]);
@@ -8,7 +9,6 @@ export default function InventoryList() {
     const fetchItems = async () => {
       try {
         const result = await axios.get("/api/inventory/getAllItems");
-        console.log("Fetched items", result.data);
         setItems(result.data);
       } catch (err) {
         console.log(err);
@@ -34,7 +34,15 @@ export default function InventoryList() {
   };
 
   return (
-    <div className="w-full h-full p-10">
+    <div className="w-full h-full p-10 overflow-hidden">
+      <div className="flex items-center justify-center mb-4">
+        <Link
+          to="/inventory-form"
+          className="border-2 text-white text-xl bg-black w-[25%] hover:bg-gray-800 flex items-center justify-center rounded-md h-full p-1"
+        >
+          Add Item
+        </Link>
+      </div>
       {items.length > 0 ? (
         <table className="w-full border-collapse">
           <thead>
@@ -48,15 +56,16 @@ export default function InventoryList() {
           <tbody>
             {items.map((item) => (
               <tr key={item._id}>
-                <td className="border p-2 w-auto">
+                <td className="border p-2">
                   <div className="flex items-center justify-center">
                     <img
                       src={item.imageUrl}
                       alt={item.name}
                       style={{
-                        width: "50%",
-                        height: "100%",
+                        width: "100px",
+                        height: "100px",
                         objectFit: "cover",
+                        objectPosition: "center",
                       }}
                     />
                   </div>

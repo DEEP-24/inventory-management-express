@@ -21,3 +21,14 @@ exports.deleteItem = async (req, res) => {
     res.status(500).json({ message: "Error deleting item", error: error });
   }
 };
+
+exports.addItem = async (req, res) => {
+  try {
+    const { name, quantity, imageUrl } = req.body;
+    const newItem = new Item({ name, quantity, imageUrl });
+    const savedItem = await newItem.save();
+    res.status(201).json(savedItem);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to add item", error: error });
+  }
+};

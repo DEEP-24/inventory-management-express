@@ -2,6 +2,7 @@ import { Link, Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import DataVisualization from "./components/data-visualization.jsx";
 import Inventory from "./components/inventory.jsx";
 import "./style.css";
+import InventoryForm from "./components/inventory-form.jsx";
 
 export default function App() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
         <Routes>
           <Route path="/inventory" element={<Inventory />} />
           <Route path="/data-visualization" element={<DataVisualization />} />
+          <Route path="/inventory-form" element={<InventoryForm />} />
           <Route path="/" element={<div></div>} />
         </Routes>
       </div>
