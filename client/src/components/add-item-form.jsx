@@ -1,17 +1,70 @@
 import axios from "axios";
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
+import * as mime from "mime-types";
 
 export default function AddItemForm() {
   const navigate = useNavigate();
   const [name, setName] = React.useState("");
   const [quantity, setQuantity] = React.useState("");
-  const [imageUrl, setImageUrl] = React.useState("");
+  const [file, setFile] = React.useState(null);
+  const [fileName, setFileName] = React.useState("");
+
+  console.log(file);
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFile(file);
+      setFileName(file.name);
+    }
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
     try {
-      const newItem = { name, quantity, imageUrl };
+      if (!file) {
+        console.log("Please select a file to upload");
+        return;
+      }
+
+      const extension = mime.extension(file.type);
+      const uniqueKeyResponse = await axios.get(
+        `/api/image/getUniqueS3Key/filename=${encodeURIComponent(
+          file.name
+        )}/extension=${encodeURIComponent(extension)}`
+      );
+
+      const { key: uploadedDocumentKey } = uniqueKeyResponse.data;
+
+      const signedUrlResponse = await axios.get(
+        `/api/image/getS3SignedUrl/key=${uploadedDocumentKey}`
+      );
+      const { signedUrl } = signedUrlResponse.data;
+
+      const response = await axios.put(signedUrl, file, {
+        headers: {
+          "Content-Type": file.type,
+        },
+      });
+
+      let imageUrl;
+
+      if (response.status === 200) {
+        const s3urlResponse = await axios.get(
+          `/api/image/getS3Url/key=${uploadedDocumentKey}`
+        );
+        imageUrl = s3urlResponse.data.url;
+      }
+
+      const newItem = {
+        name,
+        quantity,
+        imageUrl,
+        key: uploadedDocumentKey,
+        extension,
+      };
       await axios.post("/api/inventory/addItem", newItem).then(() => {
         navigate("/inventory");
       });
@@ -66,18 +119,21 @@ export default function AddItemForm() {
         <div className="mb-6">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="imageUrl"
+            htmlFor="file"
           >
-            Image URL
+            Image File
           </label>
           <input
             className="shadow appearance-none border rounded w-full py-2 px-3 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-            id="imageUrl"
-            type="text"
-            value={imageUrl}
-            onChange={(e) => setImageUrl(e.target.value)}
+            id="file"
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
             required
           />
+          {fileName && (
+            <div className="text-sm mt-2 text-gray-600">{fileName}</div>
+          )}
         </div>
         <div className="flex items-center justify-between">
           <button

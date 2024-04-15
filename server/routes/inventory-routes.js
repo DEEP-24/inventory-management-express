@@ -1,4 +1,5 @@
 const express = require("express");
+const router = express.Router();
 const {
   getAllItems,
   addItem,
@@ -6,7 +7,6 @@ const {
   deleteItem,
   getItem,
 } = require("../controllers/inventory-controller");
-const router = express.Router();
 
 router.get("/getAllItems", getAllItems);
 

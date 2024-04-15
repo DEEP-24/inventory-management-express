@@ -1,4 +1,6 @@
 const Item = require("../models/item");
+const Image = require("../models/image");
+const mongoose = require("mongoose");
 
 exports.getAllItems = async (req, res) => {
   try {
@@ -36,11 +38,39 @@ exports.getItem = async (req, res) => {
 };
 
 exports.addItem = async (req, res) => {
+  const { name, quantity, imageUrl, key, extension } = req.body;
+
+  if (!name || !quantity || !imageUrl || !key || !extension) {
+    return res.status(400).json({ message: "Missing required fields" });
+  }
+
+  const session = await mongoose.startSession();
+  session.startTransaction();
   try {
-    const { name, quantity, imageUrl } = req.body;
-    const newItem = new Item({ name, quantity, imageUrl });
-    const savedItem = await newItem.save();
-    res.status(201).json(savedItem);
+    const newItem = new Item({
+      name,
+      quantity,
+      imageUrl,
+    });
+
+    const savedItem = await newItem.save({ session });
+
+    const newImage = new Image({
+      item: savedItem._id,
+      key,
+      extension,
+      bucket: process.env.AWS_BUCKET,
+      region: process.env.AWS_REGION,
+    });
+
+    const savedImage = await newImage.save({ session });
+
+    await session.commitTransaction();
+    session.endSession();
+
+    res
+      .status(201)
+      .json({ message: "Item and image added successfully", item: savedItem });
   } catch (error) {
     res.status(500).json({ message: "Failed to add item", error: error });
   }

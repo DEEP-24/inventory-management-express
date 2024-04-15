@@ -10,6 +10,7 @@ const {
 } = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const invariant = require("tiny-invariant");
+require("dotenv").config();
 
 const _REGION = process.env.AWS_REGION;
 const _BUCKET = process.env.AWS_BUCKET;
@@ -47,7 +48,7 @@ const defaultS3SignedUrlOptions = {
  *
  * {@link https://docs.aws.amazon.com/AmazonS3/latest/userguide/example_s3_Scenario_PresignedUrl_section.html}
  */
-async function getS3SignedUrl() {
+async function getS3SignedUrl(key, options = defaultS3SignedUrlOptions) {
   const { directory, bucket, expiresIn } = {
     ...defaultS3SignedUrlOptions,
     ...options,

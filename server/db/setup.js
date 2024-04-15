@@ -5,7 +5,7 @@ const connectDB = async () => {
     await mongoose.connect(
       "mongodb+srv://Test:password1234@cluster0.kbovzuj.mongodb.net/assignment3"
     );
-    console.log("Database connected successfully");
+    console.log("Connected to Database successfully!");
   } catch (error) {
     console.error("Database connection error:", error);
   }
