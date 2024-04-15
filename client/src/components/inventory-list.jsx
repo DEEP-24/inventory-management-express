@@ -22,27 +22,75 @@ export default function InventoryList() {
   //     // logic to update an item
   //   };
 
-  //   const handleDelete = async (id) => {
-  //     await axios.delete(`/api/inventory/${id}`);
-  //     setItems(items.filter((item) => item._id !== id));
-  //   };
+  const handleDelete = async (id) => {
+    await axios
+      .post(`/api/inventory/deleteItem/${id}`)
+      .then(() => {
+        setItems(items.filter((item) => item._id !== id));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   return (
-    <div>
-      <div>
-        <h1 className="text-black text-base">Hello this is Inventory List.</h1>
-        <ul>
-          {items.length > 0 ? (
-            items.map((item) => (
-              <li key={item._id} className="text-black/50">
-                {item.name} - Quantity: {item.quantity}
-              </li>
-            ))
-          ) : (
-            <p className="text-black">No items found</p>
-          )}
-        </ul>
-      </div>
+    <div className="w-full h-full p-10">
+      {items.length > 0 ? (
+        <table className="w-full border-collapse">
+          <thead>
+            <tr>
+              <th className="border p-2 text-black">Image</th>
+              <th className="border p-2 text-black">Name</th>
+              <th className="border p-2 text-black">Quantity</th>
+              <th className="border p-2">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {items.map((item) => (
+              <tr key={item._id}>
+                <td className="border p-2 w-auto">
+                  <div className="flex items-center justify-center">
+                    <img
+                      src={item.imageUrl}
+                      alt={item.name}
+                      style={{
+                        width: "50%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </div>
+                </td>
+                <td className="border p-2 text-black w-auto">
+                  <div className="flex items-center justify-center">
+                    {item.name}
+                  </div>
+                </td>
+                <td className="border p-2 text-black w-auto">
+                  <div className="flex items-center justify-center">
+                    {item.quantity}
+                  </div>
+                </td>
+                <td className="border p-2 w-auto">
+                  <div className="flex items-center justify-center">
+                    <button className="mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded w-full">
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(item._id)}
+                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded w-full"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <p>No items found</p>
+      )}
     </div>
   );
 }
